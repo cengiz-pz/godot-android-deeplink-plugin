@@ -3,8 +3,10 @@
 Deeplink plugin allows processing of application links that enable direct navigation to requested app content
 
 ## ![](deeplink/addon_template/icon.png?raw=true) Prerequisites
-Follow instructions on the following page to create a custom Android build
-- [Create custom Android build](https://docs.godotengine.org/en/stable/tutorials/export/android_custom_build.html)
+Follow instructions on the following page to create a custom Android gradle build
+- [Create custom Android gradle build](https://docs.godotengine.org/en/stable/tutorials/export/android_gradle_build.html)
+
+- Create an `addons` directory in your project's root level.
 
 Follow instructions on the following page to associate your Godot app with your website:
 - [Associate your Godot app with your website](https://developer.android.com/studio/write/app-link-indexing#associatesite)
