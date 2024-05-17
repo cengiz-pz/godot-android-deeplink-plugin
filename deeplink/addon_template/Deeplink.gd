@@ -1,10 +1,16 @@
+#
+# © 2024-present https://github.com/cengiz-pz
+#
+
 @tool
 class_name Deeplink
 extends Node
 
-signal deeplink_received(url, scheme, host, path)
+signal deeplink_received(url: String, scheme: String, host: String, path: String)
 
 const PLUGIN_SINGLETON_NAME: String = "@pluginName@"
+
+const DEEPLINK_RECEIVED_SIGNAL_NAME = "deeplink_received"
 
 @export_category("Link")
 @export var label: String = ""
@@ -19,47 +25,24 @@ const PLUGIN_SINGLETON_NAME: String = "@pluginName@"
 
 var _plugin_singleton: Object
 
-var _url: String
-var _scheme: String
-var _host: String
-var _path: String
-
 
 func _ready() -> void:
-	_update_plugin()
-
-
-func _notification(a_what: int) -> void:
-	if a_what == NOTIFICATION_APPLICATION_RESUMED:
-		_update_plugin()
-
-
-func _update_plugin() -> void:
 	if _plugin_singleton == null:
 		if Engine.has_singleton(PLUGIN_SINGLETON_NAME):
 			_plugin_singleton = Engine.get_singleton(PLUGIN_SINGLETON_NAME)
+			_connect_signals()
 		else:
 			printerr("%s singleton not found!" % PLUGIN_SINGLETON_NAME)
 
-	if _plugin_singleton != null:
-		_url = str(_plugin_singleton.getUrl())
-		_scheme = str(_plugin_singleton.getScheme())
-		_host = str(_plugin_singleton.getHost())
-		_path = str(_plugin_singleton.getPath())
 
-		_plugin_singleton.clearData()
-
-		if (_url != null and not _url.is_empty()) or \
-				(_scheme != null and not _scheme.is_empty()) or \
-				(_host != null and not _host.is_empty()) or \
-				(_path != null and not _path.is_empty()):
-			emit_signal("deeplink_received", _url, _scheme, _host, _path)
+func _connect_signals() -> void:
+	_plugin_singleton.connect(DEEPLINK_RECEIVED_SIGNAL_NAME, _on_deeplink_received)
 
 
 func is_domain_associated(a_domain: String) -> bool:
 	var __result = false
 	if _plugin_singleton != null:
-		__result = _plugin_singleton.isDomainAssociated(a_domain)
+		__result = _plugin_singleton.is_domain_associated(a_domain)
 	else:
 		printerr("%s plugin not initialized" % PLUGIN_SINGLETON_NAME)
 
@@ -68,22 +51,54 @@ func is_domain_associated(a_domain: String) -> bool:
 
 func navigate_to_open_by_default_settings() -> void:
 	if _plugin_singleton != null:
-		_plugin_singleton.navigateToOpenByDefaultSettings()
+		_plugin_singleton.navigate_to_open_by_default_settings()
 	else:
 		printerr("%s plugin not initialized" % PLUGIN_SINGLETON_NAME)
 
 
 func get_link_url() -> String:
-	return _url
+	var __result = false
+
+	if _plugin_singleton != null:
+		__result = _plugin_singleton.get_url()
+	else:
+		printerr("%s plugin not initialized" % PLUGIN_SINGLETON_NAME)
+
+	return __result
 
 
 func get_link_scheme() -> String:
-	return _scheme
+	var __result = false
+
+	if _plugin_singleton != null:
+		__result = _plugin_singleton.get_scheme()
+	else:
+		printerr("%s plugin not initialized" % PLUGIN_SINGLETON_NAME)
+
+	return __result
 
 
 func get_link_host() -> String:
-	return _host
+	var __result = false
+
+	if _plugin_singleton != null:
+		__result = _plugin_singleton.get_host()
+	else:
+		printerr("%s plugin not initialized" % PLUGIN_SINGLETON_NAME)
+
+	return __result
 
 
 func get_link_path() -> String:
-	return _path
+	var __result = false
+
+	if _plugin_singleton != null:
+		__result = _plugin_singleton.get_path()
+	else:
+		printerr("%s plugin not initialized" % PLUGIN_SINGLETON_NAME)
+
+	return __result
+
+
+func _on_deeplink_received(a_url: String, a_scheme: String, a_host: String, a_path: String) -> void:
+	deeplink_received.emit(a_url, a_scheme, a_host, a_path)

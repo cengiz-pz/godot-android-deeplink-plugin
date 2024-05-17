@@ -1,12 +1,14 @@
+
+---
 # ![](deeplink/addon_template/icon.png?raw=true) Deeplink Plugin
 
-Deeplink plugin allows processing of application links that enable direct navigation to requested app content
+Deeplink plugin allows processing of Android application links that enable direct navigation to requested app content.
+
+_For iOS version, visit https://github.com/cengiz-pz/godot-ios-deeplink-plugin ._
 
 ## ![](deeplink/addon_template/icon.png?raw=true) Prerequisites
 Follow instructions on the following page to create a custom Android gradle build
 - [Create custom Android gradle build](https://docs.godotengine.org/en/stable/tutorials/export/android_gradle_build.html)
-
-- Create an `addons` directory in your project's root level.
 
 Follow instructions on the following page to associate your Godot app with your website:
 - [Associate your Godot app with your website](https://developer.android.com/studio/write/app-link-indexing#associatesite)
@@ -21,33 +23,40 @@ Steps:
 - search for and select the `Deeplink` plugin in Godot Editor
 - click `Download` button
 - on the installation dialog...
-  - click `Change Install Folder` button and select your project's `addons` directory
-  - uncheck `Ignore asset root` checkbox
-  - click `Install` button
+	- keep `Change Install Folder` setting pointing to your project's root directory
+	- keep `Ignore asset root` checkbox checked
+	- click `Install` button
 - enable the plugin via the `Plugins` tab of `Project->Project Settings...` menu, in the Godot Editor
 
 ### ![](deeplink/addon_template/icon.png?raw=true) Installing manually
 Steps:
 - download release archive from Github
 - unzip the release archive
-- copy to your Godot project's `addons` directory
+- copy to your Godot project's root directory
 - enable the plugin via the `Plugins` tab of `Project->Project Settings...` menu, in the Godot Editor
 
 ## ![](deeplink/addon_template/icon.png?raw=true) Usage
-- Add one `Deeplink` node to your scene per URL association and follow the following steps:
-  - set the required field on each `Deeplink` node
-    - `scheme`
-    - `host`
-    - `path prefix`
+- Add `Deeplink` nodes to your scene per URL association and follow the following steps:
+	- set the required field on each `Deeplink` node
+		- `scheme`
+		- `host`
+		- `path prefix`
+	- note that `scheme`, `host`, and `path prefix` must all match for a URI to be processed by the app
+		- leave `path prefix` empty to process all paths in `host`
 - register a listener for the `deeplink_received` signal
-- use the following methods to get deeplink data:
-    - `get_link_url()` -> full URL for the deeplink
+	- process `url`, `scheme`, `host`, and `path` data from the signal
+- alternatively, use the following methods to get most recent deeplink data:
+	- `get_link_url()` -> full URL for the deeplink
 	- `get_link_scheme()` -> scheme for the deeplink (ie. 'https')
 	- `get_link_host()` -> host for the deeplink (ie. 'www.example.com')
 	- `get_link_path()` -> path for the deeplink (the part that comes after host)
 - additional methods:
-  - `is_domain_associated(a_domain: String)` -> returns true if your application is correctly associated with the given domain on the tested device
-  - `navigate_to_open_by_default_settings()` -> navigates to the Android OS' `Open by Default` settings screen for your application
+	- `is_domain_associated(a_domain: String)` -> returns true if your application is correctly associated with the given domain on the tested device
+	- `navigate_to_open_by_default_settings()` -> navigates to the Android OS' `Open by Default` settings screen for your application
+
+## ![](deeplink/addon_template/icon.png?raw=true) Testing
+`adb shell` command can be used to simulate app links as follows:
+- `$> adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "https://www.example.com/mydata/path"`
 
 ## ![](deeplink/addon_template/icon.png?raw=true) Troubleshooting
 `adb logcat` is one of the best tools for troubleshooting unexpected behavior
@@ -59,3 +68,10 @@ Steps:
 
 Also check out:
 https://docs.godotengine.org/en/stable/tutorials/platform/android/android_plugin.html#troubleshooting
+<br/><br/><br/>
+
+---
+# ![](deeplink/addon_template/icon.png?raw=true) Credits
+Developed by [Cengiz](https://github.com/cengiz-pz)
+
+Original repository: [Godot Android Deeplink Plugin](https://github.com/cengiz-pz/godot-android-deeplink-plugin)

@@ -1,3 +1,7 @@
+#
+# © 2024-present https://github.com/cengiz-pz
+#
+
 @tool
 extends EditorPlugin
 
@@ -5,6 +9,7 @@ const PLUGIN_NODE_TYPE_NAME: String = "Deeplink"
 const PLUGIN_PARENT_NODE_TYPE: String = "Node"
 const PLUGIN_NAME: String = "@pluginName@"
 const PLUGIN_VERSION: String = "@pluginVersion@"
+const PLUGIN_DEPENDENCIES: Array = [ @pluginDependencies@ ]
 
 var export_plugin: AndroidExportPlugin
 
@@ -43,9 +48,7 @@ class AndroidExportPlugin extends EditorExportPlugin:
 
 
 	func _get_android_dependencies(platform: EditorExportPlatform, debug: bool) -> PackedStringArray:
-		return PackedStringArray([
-			"androidx.annotation:annotation:1.7.1"
-		])
+		return PackedStringArray(PLUGIN_DEPENDENCIES)
 
 
 	func _get_android_manifest_activity_element_contents(platform: EditorExportPlatform, debug: bool) -> String:
@@ -56,15 +59,15 @@ class AndroidExportPlugin extends EditorExportPlugin:
 		for __node in __deeplink_nodes:
 			var __deeplink_node = __node as Deeplink
 			if __deeplink_node.is_auto_verify:
-				__contents += "<intent-filter android:label=\"%s\" android:autoVerify=\"true\">\n" % __deeplink_node.label
+				__contents += """<intent-filter android:label="%s" android:autoVerify="true">\n""" % __deeplink_node.label
 			else:
-				__contents += "<intent-filter android:label=\"%s\">\n" % __deeplink_node.label
-			__contents += "\t<action android:name=\"android.intent.action.VIEW\" />\n"
+				__contents += """<intent-filter android:label="%s">\n""" % __deeplink_node.label
+			__contents += """\t<action android:name="android.intent.action.VIEW" />\n"""
 			if __deeplink_node.is_default:
-				__contents += "\t<category android:name=\"android.intent.category.DEFAULT\" />\n"
+				__contents += """\t<category android:name="android.intent.category.DEFAULT" />\n"""
 			if __deeplink_node.is_browsable:
-				__contents += "\t<category android:name=\"android.intent.category.BROWSABLE\" />\n"
-			__contents += "\t<data android:scheme=\"%s\" android:host=\"%s\" android:pathPrefix=\"%s\" />\n" % [__deeplink_node.scheme, __deeplink_node.host, __deeplink_node.path_prefix]
+				__contents += """\t<category android:name="android.intent.category.BROWSABLE" />\n"""
+			__contents += """\t<data android:scheme="%s" android:host="%s" android:pathPrefix="%s" />\n""" % [__deeplink_node.scheme, __deeplink_node.host, __deeplink_node.path_prefix]
 			__contents += "</intent-filter>\n"
 
 		return __contents
