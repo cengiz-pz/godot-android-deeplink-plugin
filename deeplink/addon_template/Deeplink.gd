@@ -57,7 +57,7 @@ func navigate_to_open_by_default_settings() -> void:
 
 
 func get_link_url() -> String:
-	var __result = false
+	var __result = ""
 
 	if _plugin_singleton != null:
 		__result = _plugin_singleton.get_url()
@@ -68,7 +68,7 @@ func get_link_url() -> String:
 
 
 func get_link_scheme() -> String:
-	var __result = false
+	var __result = ""
 
 	if _plugin_singleton != null:
 		__result = _plugin_singleton.get_scheme()
@@ -79,7 +79,7 @@ func get_link_scheme() -> String:
 
 
 func get_link_host() -> String:
-	var __result = false
+	var __result = ""
 
 	if _plugin_singleton != null:
 		__result = _plugin_singleton.get_host()
@@ -90,7 +90,7 @@ func get_link_host() -> String:
 
 
 func get_link_path() -> String:
-	var __result = false
+	var __result = ""
 
 	if _plugin_singleton != null:
 		__result = _plugin_singleton.get_path()
