@@ -58,7 +58,31 @@ Steps:
 `adb shell` command can be used to simulate app links as follows:
 - `$> adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "https://www.example.com/mydata/path"`
 
+## ![](admob/addon_template/icon.png?raw=true) Android Export
+- Make sure that the scene that contains your Deeplink nodes is selected in the Godot Editor when building and exporting for Android
+	- Close other scenes to make sure
+	- _Deeplink nodes will be searched in the scene that is currently open in the Godot Editor_
+
 ## ![](deeplink/addon_template/icon.png?raw=true) Troubleshooting
+
+### Unhandled Deeplinks
+If your game is not handling your deeplinks, then make sure to revisit the [Android Export](#android-export) and [Prerequisites](#prerequisites) sections.
+
+### Plugin icon
+If you're getting the following error or any error related to the plugin's `icon.png` file:
+
+```
+Godot Engine v4.?.stable.official (c) 2007-present Juan Linietsky, Ariel Manzur & Godot Contributors.
+--- Debug adapter server started ---
+--- GDScript language server started on port ? ---
+  res://addons/[?]Plugin/[?]ExportPlugin.gd:21 - Parse Error: Preload file "res://addons/[?]Plugin/icon.png" has no resource loaders (unrecognized file extension).
+  res://addons/[?]Plugin/[?]ExportPlugin.gd:70 - Parse Error: Could not find type "[?]" in the current scope.
+  ...
+```
+
+then reimport the `res://addons/[?]Plugin/icon.png` file from Godot Editor's context menu.
+
+### ADB logcat
 `adb logcat` is one of the best tools for troubleshooting unexpected behavior
 - use `$> adb logcat | grep 'godot'` on Linux
 	- `adb logcat *:W` to see warnings and errors
