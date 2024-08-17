@@ -6,7 +6,7 @@
 class_name Deeplink
 extends Node
 
-signal deeplink_received(url: String, scheme: String, host: String, path: String)
+signal deeplink_received(url: DeeplinkUrl)
 
 const PLUGIN_SINGLETON_NAME: String = "@pluginName@"
 
@@ -100,5 +100,12 @@ func get_link_path() -> String:
 	return __result
 
 
-func _on_deeplink_received(a_url: String, a_scheme: String, a_host: String, a_path: String) -> void:
-	deeplink_received.emit(a_url, a_scheme, a_host, a_path)
+func clear_data() -> void:
+	if _plugin_singleton != null:
+		_plugin_singleton.clear_data()
+	else:
+		printerr("%s plugin not initialized" % PLUGIN_SINGLETON_NAME)
+
+
+func _on_deeplink_received(a_data: Dictionary) -> void:
+	deeplink_received.emit(DeeplinkUrl.new(a_data))

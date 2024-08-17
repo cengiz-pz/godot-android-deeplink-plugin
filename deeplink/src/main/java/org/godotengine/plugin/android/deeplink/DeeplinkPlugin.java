@@ -18,6 +18,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.godotengine.godot.Dictionary;
 import org.godotengine.godot.Godot;
 import org.godotengine.godot.plugin.GodotPlugin;
 import org.godotengine.godot.plugin.SignalInfo;
@@ -33,8 +34,7 @@ public class DeeplinkPlugin extends GodotPlugin {
 	private static final String CLASS_NAME = DeeplinkPlugin.class.getSimpleName();
 	private static final String LOG_TAG = "godot::" + CLASS_NAME;
 
-	private static final SignalInfo DEEPLINK_RECEIVED_SIGNAL = new SignalInfo("deeplink_received",
-			String.class, String.class, String.class, String.class);
+	private static final SignalInfo DEEPLINK_RECEIVED_SIGNAL = new SignalInfo("deeplink_received", Dictionary.class);
 
 	private Activity activity;
 
@@ -239,8 +239,7 @@ public class DeeplinkPlugin extends GodotPlugin {
 		if (currentIntent != null) {
 			Uri uri = currentIntent.getData();
 			if (uri != null) {
-				emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL,
-						currentIntent.getDataString(), uri.getScheme(), uri.getHost(), uri.getPath());
+				emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, new DeeplinkUrl(uri).getRawData());
 			}
 		}
 
@@ -255,8 +254,7 @@ public class DeeplinkPlugin extends GodotPlugin {
 			if (currentIntent != null) {
 				Uri uri = currentIntent.getData();
 				if (uri != null) {
-					emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL,
-							currentIntent.getDataString(), uri.getScheme(), uri.getHost(), uri.getPath());
+					emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, new DeeplinkUrl(uri).getRawData());
 				}
 			}
 		}

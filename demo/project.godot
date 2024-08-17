@@ -12,8 +12,8 @@ config_version=5
 
 config/name="Deeplink Demo"
 run/main_scene="res://Main.tscn"
-config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://icon.svg"
+config/features=PackedStringArray("4.3", "GL Compatibility")
+config/icon="res://deeplink.png"
 
 [display]
 
