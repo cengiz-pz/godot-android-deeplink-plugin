@@ -24,6 +24,7 @@ func _ready() -> void:
 		__deeplink_url.set_path(deeplink.get_link_path())
 		_on_deeplink_deeplink_received(__deeplink_url)
 
+
 func _on_is_associated_button_pressed() -> void:
 	_print_to_screen("Association for domain %s is %s" % [
 			_text_edit.text,

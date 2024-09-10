@@ -62,4 +62,3 @@ path_prefix = "/mydata"
 
 [connection signal="pressed" from="CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/IsAssociatedButton" to="." method="_on_is_associated_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/NavigateButton" to="." method="_on_navigate_button_pressed"]
-[connection signal="deeplink_received" from="Deeplink" to="." method="_on_deeplink_deeplink_received"]
