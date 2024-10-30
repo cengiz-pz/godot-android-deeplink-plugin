@@ -20,4 +20,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "godot-android-deeplink-plugin"
 
+include(":godot-lib")
 include(":deeplink")

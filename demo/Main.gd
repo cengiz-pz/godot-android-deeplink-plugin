@@ -4,20 +4,17 @@
 
 extends Node
 
-@onready var deeplink: Deeplink = $Deeplink as Deeplink
-@onready var _label: RichTextLabel = $CanvasLayer/CenterContainer/VBoxContainer/RichTextLabel as RichTextLabel
-@onready var _text_edit: TextEdit = $CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/TextEdit as TextEdit
+onready var deeplink: Deeplink = $Deeplink as Deeplink
+onready var _label: RichTextLabel = $CanvasLayer/CenterContainer/VBoxContainer/RichTextLabel as RichTextLabel
+onready var _text_edit: TextEdit = $CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/TextEdit as TextEdit
 
 
 func _ready() -> void:
-	if not deeplink.host.is_empty():
-		_text_edit.text = deeplink.host
-
-	deeplink.deeplink_received.connect(_on_deeplink_deeplink_received)
+	deeplink.connect("deeplink_received", self, "_on_deeplink_deeplink_received")
 
 	# check if app link was received at startup
 	var __url: String = deeplink.get_link_url()
-	if __url != null and not __url.is_empty():
+	if __url != null and not __url.empty():
 		var __deeplink_url = DeeplinkUrl.new()
 		__deeplink_url.set_scheme(deeplink.get_link_scheme())
 		__deeplink_url.set_host(deeplink.get_link_host())
@@ -25,7 +22,7 @@ func _ready() -> void:
 		_on_deeplink_deeplink_received(__deeplink_url)
 
 
-func _on_is_associated_button_pressed() -> void:
+func _on_check_association_button_pressed() -> void:
 	_print_to_screen("Association for domain %s is %s" % [
 			_text_edit.text,
 			"valid" if deeplink.is_domain_associated(_text_edit.text) else "invalid"

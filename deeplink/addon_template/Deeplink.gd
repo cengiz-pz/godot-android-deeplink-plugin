@@ -2,26 +2,14 @@
 # © 2024-present https://github.com/cengiz-pz
 #
 
-@tool
-class_name Deeplink
-extends Node
+tool
+class_name Deeplink extends Node
 
-signal deeplink_received(url: DeeplinkUrl)
+signal deeplink_received(url)
 
 const PLUGIN_SINGLETON_NAME: String = "@pluginName@"
 
 const DEEPLINK_RECEIVED_SIGNAL_NAME = "deeplink_received"
-
-@export_category("Link")
-@export var label: String = ""
-@export var is_auto_verify: bool = true
-@export_category("Link Category")
-@export var is_default: bool = true
-@export var is_browsable: bool = true
-@export_category("Link Data")
-@export var scheme: String = "https"
-@export var host: String = ""
-@export var path_prefix: String = ""
 
 var _plugin_singleton: Object
 
@@ -36,7 +24,7 @@ func _ready() -> void:
 
 
 func _connect_signals() -> void:
-	_plugin_singleton.connect(DEEPLINK_RECEIVED_SIGNAL_NAME, _on_deeplink_received)
+	_plugin_singleton.connect(DEEPLINK_RECEIVED_SIGNAL_NAME, self, "_on_deeplink_received")
 
 
 func is_domain_associated(a_domain: String) -> bool:
@@ -108,4 +96,4 @@ func clear_data() -> void:
 
 
 func _on_deeplink_received(a_data: Dictionary) -> void:
-	deeplink_received.emit(DeeplinkUrl.new(a_data))
+	emit_signal(DEEPLINK_RECEIVED_SIGNAL_NAME, DeeplinkUrl.new(a_data))

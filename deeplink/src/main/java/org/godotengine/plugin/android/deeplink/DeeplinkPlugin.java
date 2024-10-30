@@ -232,36 +232,33 @@ public class DeeplinkPlugin extends GodotPlugin {
 	@Nullable
 	@Override
 	public View onMainCreate(Activity activity) {
+		Log.d(LOG_TAG, "onMainCreate() " + CLASS_NAME + " created.");
 		this.activity = activity;
 
-		Intent currentIntent = activity.getIntent();
-
-		if (currentIntent != null) {
-			Uri uri = currentIntent.getData();
-			if (uri != null) {
-				emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, new DeeplinkUrl(uri).getRawData());
-			}
-		}
+		checkIntent(activity.getIntent());
 
 		return super.onMainCreate(activity);
 	}
 
 	@Override
 	public void onMainResume() {
+		Log.d(LOG_TAG, "onMainResume() " + CLASS_NAME + " resumed.");
 		if (activity != null) {
-			Intent currentIntent = activity.getIntent();
-
-			if (currentIntent != null) {
-				Uri uri = currentIntent.getData();
-				if (uri != null) {
-					emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, new DeeplinkUrl(uri).getRawData());
-				}
-			}
+			checkIntent(activity.getIntent());
 		}
 		else {
 			Log.e(LOG_TAG, "onMainResume() activity is null");
 		}
 
 		super.onMainResume();
+	}
+
+	private void checkIntent(Intent intent) {
+		if (intent != null) {
+			Uri uri = intent.getData();
+			if (uri != null) {
+				GodotPlugin.emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, new DeeplinkUrl(uri).getRawData());
+			}
+		}
 	}
 }

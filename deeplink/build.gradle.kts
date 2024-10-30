@@ -10,14 +10,17 @@ plugins {
 	id("org.jetbrains.kotlin.android") version "2.0.10"
 }
 
+val pluginNodeName = "Deeplink"
 val pluginName = "DeeplinkPlugin"
 val pluginPackageName = "org.godotengine.plugin.android.deeplink"
-val godotVersion = "4.3.0"
-val pluginVersion = "3.0"
+val godotVersion = "3.6.0"
+val pluginVersion = "1.0-godot-3"
 val demoAddOnsDirectory = "../demo/addons"
+val demoAndroidPluginsDirectory = "../demo/android/plugins"
 val templateDirectory = "addon_template"
 val pluginDependencies = arrayOf(
-	"androidx.annotation:annotation:1.8.2"
+	"androidx.annotation:annotation:1.8.2",
+	"androidx.fragment:fragment:1.8.4"
 )
 
 android {
@@ -48,26 +51,47 @@ android {
 }
 
 dependencies {
-	implementation("org.godotengine:godot:$godotVersion.stable")
+	//implementation("org.godotengine:godot:$godotVersion.stable")
+	api(project(":godot-lib"))
 	pluginDependencies.forEach { implementation(it) }
 }
 
-val copyDebugAARToDemoAddons by tasks.registering(Copy::class) {
-	description = "Copies the generated debug AAR binary to the plugin's addons directory"
-	from("build/outputs/aar")
-	include("$pluginName-$pluginVersion-debug.aar")
-	into("$demoAddOnsDirectory/$pluginName/bin/debug")
-}
-
-val copyReleaseAARToDemoAddons by tasks.registering(Copy::class) {
-	description = "Copies the generated release AAR binary to the plugin's addons directory"
+val copyAARsToDemoAndroidPlugins by tasks.registering(Copy::class) {
+	description = "Copies the generated release AAR binary to the plugin's android plugins directory"
 	from("build/outputs/aar")
 	include("$pluginName-$pluginVersion-release.aar")
-	into("$demoAddOnsDirectory/$pluginName/bin/release")
+	include("$pluginName-$pluginVersion-debug.aar")
+	into("$demoAndroidPluginsDirectory/")
+	rename("$pluginName-$pluginVersion-release.aar", "$pluginName-$pluginVersion.release.aar")
+	rename("$pluginName-$pluginVersion-debug.aar", "$pluginName-$pluginVersion.debug.aar")
 }
 
-val cleanDemoAddons by tasks.registering(Delete::class) {
-	delete("$demoAddOnsDirectory/$pluginName")
+val copyConfigToDemoAndroidPlugins by tasks.registering(Copy::class) {
+	description = "Copies the generated release AAR binary to the plugin's android plugins directory"
+	from("config")
+	include("${pluginNodeName}*")
+	into("$demoAndroidPluginsDirectory/")
+
+	var dependencyString = ""
+	for (i in pluginDependencies.indices) {
+		dependencyString += "\"${pluginDependencies[i]}\""
+		if (i < pluginDependencies.size-1) dependencyString += ", "
+	}
+	filter(ReplaceTokens::class,
+		"tokens" to mapOf(
+			"pluginName" to pluginName,
+			"pluginNodeName" to pluginNodeName,
+			"pluginVersion" to pluginVersion,
+			"pluginDependencies" to dependencyString))
+}
+
+val cleanDemoAddonsAndAndroidPlugins by tasks.registering(Delete::class) {
+	delete(
+		"${demoAddOnsDirectory}/$pluginName",
+		fileTree(demoAndroidPluginsDirectory) {
+			include("${pluginName}*")
+			include("${pluginNodeName}*")
+		})
 }
 
 val copyPngsToDemo by tasks.registering(Copy::class) {
@@ -80,9 +104,9 @@ val copyPngsToDemo by tasks.registering(Copy::class) {
 val copyAddonsToDemo by tasks.registering(Copy::class) {
 	description = "Copies the export scripts templates to the plugin's addons directory"
 
-	dependsOn(cleanDemoAddons)
-	finalizedBy(copyDebugAARToDemoAddons)
-	finalizedBy(copyReleaseAARToDemoAddons)
+	dependsOn(cleanDemoAddonsAndAndroidPlugins)
+	finalizedBy(copyAARsToDemoAndroidPlugins)
+	finalizedBy(copyConfigToDemoAndroidPlugins)
 	finalizedBy(copyPngsToDemo)
 
 	from(templateDirectory)
@@ -95,6 +119,7 @@ val copyAddonsToDemo by tasks.registering(Copy::class) {
 	}
 	filter(ReplaceTokens::class,
 		"tokens" to mapOf(
+			"pluginNodeName" to pluginNodeName,
 			"pluginName" to pluginName,
 			"pluginVersion" to pluginVersion,
 			"pluginPackage" to pluginPackageName,
@@ -108,10 +133,15 @@ tasks.register<Zip>("packageDistribution") {
 	from("../demo/addons/${pluginName}") {
 		into("${pluginName}-root/addons/${pluginName}")
 	}
+
+	from(demoAndroidPluginsDirectory) {
+		include("${pluginNodeName}*")
+		into("${pluginName}-root/android/plugins")
+	}
 }
 
 tasks.named<Delete>("clean").apply {
-	dependsOn(cleanDemoAddons)
+	dependsOn(cleanDemoAddonsAndAndroidPlugins)
 }
 
 afterEvaluate {
