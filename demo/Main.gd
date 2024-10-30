@@ -10,8 +10,6 @@ onready var _text_edit: TextEdit = $CanvasLayer/CenterContainer/VBoxContainer/VB
 
 
 func _ready() -> void:
-	deeplink.connect("deeplink_received", self, "_on_deeplink_deeplink_received")
-
 	# check if app link was received at startup
 	var __url: String = deeplink.get_link_url()
 	if __url != null and not __url.empty():
@@ -19,7 +17,8 @@ func _ready() -> void:
 		__deeplink_url.set_scheme(deeplink.get_link_scheme())
 		__deeplink_url.set_host(deeplink.get_link_host())
 		__deeplink_url.set_path(deeplink.get_link_path())
-		_on_deeplink_deeplink_received(__deeplink_url)
+
+		_on_Deeplink_deeplink_received(__deeplink_url)
 
 
 func _on_check_association_button_pressed() -> void:
@@ -34,15 +33,15 @@ func _on_navigate_button_pressed() -> void:
 	deeplink.navigate_to_open_by_default_settings()
 
 
-func _on_deeplink_deeplink_received(a_url: DeeplinkUrl) -> void:
-	_print_to_screen("Deeplink received with scheme: %s, host: %s, path: %s" % [
-		a_url.get_scheme(), a_url.get_host(), a_url.get_path()
-	])
-
-
 func _print_to_screen(a_message: String, a_is_error: bool = false) -> void:
 	_label.add_text("%s\n\n" % a_message)
 	if a_is_error:
 		printerr(a_message)
 	else:
 		print(a_message)
+
+
+func _on_Deeplink_deeplink_received(a_url: DeeplinkUrl) -> void:
+	_print_to_screen("Deeplink received with scheme: %s, host: %s, path: %s" % [
+		a_url.get_scheme(), a_url.get_host(), a_url.get_path()
+	])

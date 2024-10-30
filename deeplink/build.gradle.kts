@@ -13,19 +13,19 @@ plugins {
 val pluginNodeName = "Deeplink"
 val pluginName = "DeeplinkPlugin"
 val pluginPackageName = "org.godotengine.plugin.android.deeplink"
-val godotVersion = "3.6.0"
+val godotVersion = "3.5.2"
 val pluginVersion = "1.0-godot-3"
 val demoAddOnsDirectory = "../demo/addons"
 val demoAndroidPluginsDirectory = "../demo/android/plugins"
 val templateDirectory = "addon_template"
 val pluginDependencies = arrayOf(
-	"androidx.annotation:annotation:1.8.2",
-	"androidx.fragment:fragment:1.8.4"
+	"androidx.appcompat:appcompat:1.5.1",
+	"androidx.fragment:fragment:1.5.7"
 )
 
 android {
 	namespace = pluginPackageName
-	compileSdk = 34
+	compileSdk = 32
 
 	buildFeatures {
 		buildConfig = true
@@ -41,18 +41,17 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_17
-		targetCompatibility = JavaVersion.VERSION_17
+		sourceCompatibility = JavaVersion.VERSION_11
+		targetCompatibility = JavaVersion.VERSION_11
 	}
 
 	kotlinOptions {
-		jvmTarget = "17"
+		jvmTarget = "11"
 	}
 }
 
 dependencies {
-	//implementation("org.godotengine:godot:$godotVersion.stable")
-	api(project(":godot-lib"))
+	compileOnly("org.godotengine:godot:$godotVersion.stable")
 	pluginDependencies.forEach { implementation(it) }
 }
 

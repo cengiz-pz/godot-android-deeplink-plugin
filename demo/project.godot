@@ -26,7 +26,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Deeplink Demo for Godot 3"
+config/name="Deeplink Demo for Godot 3.5"
 run/main_scene="res://Main.tscn"
 config/icon="res://assets/deeplink.png"
 
@@ -40,6 +40,10 @@ window/stretch/mode="2d"
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/DeeplinkPlugin/plugin.cfg" )
+
+[global]
+
+icon=true
 
 [gui]
 
