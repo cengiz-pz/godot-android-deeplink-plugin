@@ -2,7 +2,7 @@
 
 name="@pluginNodeName@"
 binary_type="local"
-binary="@pluginName@-@pluginVersion@.release.aar"
+binary="@pluginName@-@pluginVersion@.debug.aar"
 
 [dependencies]
 

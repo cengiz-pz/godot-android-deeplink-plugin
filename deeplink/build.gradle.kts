@@ -53,7 +53,7 @@ android {
 dependencies {
 	//implementation("org.godotengine:godot:$godotVersion.stable")
 	api(project(":godot-lib"))
-	pluginDependencies.forEach { implementation(it) }
+	pluginDependencies.forEach { compileOnly(it) }
 }
 
 val copyAARsToDemoAndroidPlugins by tasks.registering(Copy::class) {
