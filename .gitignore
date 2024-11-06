@@ -20,7 +20,6 @@ out/
 # Gradle files
 .gradle/
 gradle/
-build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -92,3 +91,14 @@ demo/addons
 
 # Mac OS
 .DS_Store
+
+.transforms/
+generated/
+intermediates/
+outputs/
+tmp/
+/deeplink/build/
+
+/demo/android/build/*
+/demo/android/plugins/*
+!/demo/android/build/AndroidManifest.xml

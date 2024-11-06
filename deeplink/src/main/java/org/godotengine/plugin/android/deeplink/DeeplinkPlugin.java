@@ -34,6 +34,8 @@ public class DeeplinkPlugin extends GodotPlugin {
 	private static final String CLASS_NAME = DeeplinkPlugin.class.getSimpleName();
 	private static final String LOG_TAG = "godot::" + CLASS_NAME;
 
+	static DeeplinkPlugin instance;
+
 	private static final SignalInfo DEEPLINK_RECEIVED_SIGNAL = new SignalInfo("deeplink_received", Dictionary.class);
 
 	private Activity activity;
@@ -232,36 +234,14 @@ public class DeeplinkPlugin extends GodotPlugin {
 	@Nullable
 	@Override
 	public View onMainCreate(Activity activity) {
+		Log.d(LOG_TAG, "onMainCreate() " + CLASS_NAME + " created.");
 		this.activity = activity;
-
-		Intent currentIntent = activity.getIntent();
-
-		if (currentIntent != null) {
-			Uri uri = currentIntent.getData();
-			if (uri != null) {
-				emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, new DeeplinkUrl(uri).getRawData());
-			}
-		}
+		instance = this;
 
 		return super.onMainCreate(activity);
 	}
 
-	@Override
-	public void onMainResume() {
-		if (activity != null) {
-			Intent currentIntent = activity.getIntent();
-
-			if (currentIntent != null) {
-				Uri uri = currentIntent.getData();
-				if (uri != null) {
-					emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, new DeeplinkUrl(uri).getRawData());
-				}
-			}
-		}
-		else {
-			Log.e(LOG_TAG, "onMainResume() activity is null");
-		}
-
-		super.onMainResume();
+	void handleDeeplinkReceived(Dictionary deeplinkData) {
+		GodotPlugin.emitSignal(getGodot(), getPluginName(), DEEPLINK_RECEIVED_SIGNAL, deeplinkData);
 	}
 }

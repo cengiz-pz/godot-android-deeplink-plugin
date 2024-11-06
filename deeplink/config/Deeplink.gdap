@@ -1,0 +1,9 @@
+[config]
+
+name="@pluginNodeName@"
+binary_type="local"
+binary="@pluginName@-@pluginVersion@.debug.aar"
+
+[dependencies]
+
+remote=[ @pluginDependencies@ ]

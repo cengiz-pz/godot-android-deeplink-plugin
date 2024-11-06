@@ -6,29 +6,53 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=5
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node",
+"class": "Deeplink",
+"language": "GDScript",
+"path": "res://addons/DeeplinkPlugin/Deeplink.gd"
+}, {
+"base": "Reference",
+"class": "DeeplinkUrl",
+"language": "GDScript",
+"path": "res://addons/DeeplinkPlugin/model/DeeplinkUrl.gd"
+} ]
+_global_script_class_icons={
+"Deeplink": "",
+"DeeplinkUrl": ""
+}
 
 [application]
 
-config/name="Deeplink Demo"
+config/name="Deeplink Demo for Godot 3"
 run/main_scene="res://Main.tscn"
-config/features=PackedStringArray("4.3", "GL Compatibility")
-config/icon="res://deeplink.png"
+config/icon="res://assets/deeplink.png"
 
 [display]
 
-window/size/viewport_width=450
-window/size/viewport_height=700
-window/stretch/mode="canvas_items"
-window/stretch/aspect="ignore"
-window/handheld/orientation=1
+window/size/width=450
+window/size/height=700
+window/handheld/orientation="portrait"
+window/stretch/mode="2d"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/DeeplinkPlugin/plugin.cfg")
+enabled=PoolStringArray( "res://addons/DeeplinkPlugin/plugin.cfg" )
+
+[global]
+
+icon=true
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[physics]
+
+common/enable_pause_aware_picking=true
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
-textures/vram_compression/import_etc2_astc=true
+environment/default_environment="res://default_env.tres"
