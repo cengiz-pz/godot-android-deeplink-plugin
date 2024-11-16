@@ -11,6 +11,7 @@ plugins {
 }
 
 val pluginName = "DeeplinkPlugin"
+val pluginNodeType = "Deeplink"
 val pluginPackageName = "org.godotengine.plugin.android.deeplink"
 val godotVersion = "4.3.0"
 val pluginVersion = "3.0"
