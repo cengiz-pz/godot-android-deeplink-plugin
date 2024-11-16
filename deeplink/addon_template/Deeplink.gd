@@ -3,8 +3,7 @@
 #
 
 @tool
-class_name Deeplink
-extends Node
+class_name Deeplink extends Node
 
 signal deeplink_received(url: DeeplinkUrl)
 

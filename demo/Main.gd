@@ -15,15 +15,6 @@ func _ready() -> void:
 
 	deeplink.deeplink_received.connect(_on_deeplink_deeplink_received)
 
-	# check if app link was received at startup
-	var __url: String = deeplink.get_link_url()
-	if __url != null and not __url.is_empty():
-		var __deeplink_url = DeeplinkUrl.new()
-		__deeplink_url.set_scheme(deeplink.get_link_scheme())
-		__deeplink_url.set_host(deeplink.get_link_host())
-		__deeplink_url.set_path(deeplink.get_link_path())
-		_on_deeplink_deeplink_received(__deeplink_url)
-
 
 func _on_is_associated_button_pressed() -> void:
 	_print_to_screen("Association for domain %s is %s" % [

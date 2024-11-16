@@ -2,8 +2,7 @@
 # © 2024-present https://github.com/cengiz-pz
 #
 
-class_name DeeplinkUrl
-extends Object
+class_name DeeplinkUrl extends RefCounted
 
 const SCHEME_PROPERTY: String = "scheme"
 const USER_PROPERTY: String = "user"
