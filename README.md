@@ -1,3 +1,6 @@
+<p align="center">
+  <img width="256" height="256" src="demo/deeplink.png">
+</p>
 
 ---
 # ![](deeplink/addon_template/icon.png?raw=true) Deeplink Plugin

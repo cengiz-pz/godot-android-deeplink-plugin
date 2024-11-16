@@ -29,6 +29,34 @@ func _exit_tree() -> void:
 class AndroidExportPlugin extends EditorExportPlugin:
 	var _plugin_name = PLUGIN_NAME
 
+	const DEEPLINK_ACTIVITY_FORMAT = """
+		<activity
+			android:name="org.godotengine.plugin.android.deeplink.DeeplinkActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+			android:excludeFromRecents="true"
+			android:launchMode="singleTask"
+			android:exported="true"
+			android:noHistory="true">
+
+			%s
+		</activity>
+"""
+
+	const DEEPLINK_INTENT_FILTER_FORMAT = """
+			<intent-filter android:label="%s" %s>
+				<action android:name="android.intent.action.VIEW" />
+				%s
+				%s
+				<data android:scheme="%s"
+					android:host="%s"
+					android:pathPrefix="%s" />
+			</intent-filter>
+"""
+
+	const DEEPLINK_INTENT_FILTER_AUTO_VERIFY_PROPERTY = "android:autoVerify=\"true\""
+	const DEEPLINK_INTENT_FILTER_DEFAULT_CATEGORY = "<category android:name=\"android.intent.category.DEFAULT\" />"
+	const DEEPLINK_INTENT_FILTER_BROWSABLE_CATEGORY = "<category android:name=\"android.intent.category.BROWSABLE\" />"
+
 
 	func _supports_platform(platform: EditorExportPlatform) -> bool:
 		if platform is EditorExportPlatformAndroid:
@@ -51,26 +79,24 @@ class AndroidExportPlugin extends EditorExportPlugin:
 		return PackedStringArray(PLUGIN_DEPENDENCIES)
 
 
-	func _get_android_manifest_activity_element_contents(platform: EditorExportPlatform, debug: bool) -> String:
-		var __contents: String = ""
+	func _get_android_manifest_application_element_contents(platform: EditorExportPlatform, debug: bool) -> String:
+		var __filters: String = ""
 
 		var __deeplink_nodes: Array = _get_deeplink_nodes(EditorInterface.get_edited_scene_root())
 
 		for __node in __deeplink_nodes:
 			var __deeplink_node = __node as Deeplink
-			if __deeplink_node.is_auto_verify:
-				__contents += """<intent-filter android:label="%s" android:autoVerify="true">\n""" % __deeplink_node.label
-			else:
-				__contents += """<intent-filter android:label="%s">\n""" % __deeplink_node.label
-			__contents += """\t<action android:name="android.intent.action.VIEW" />\n"""
-			if __deeplink_node.is_default:
-				__contents += """\t<category android:name="android.intent.category.DEFAULT" />\n"""
-			if __deeplink_node.is_browsable:
-				__contents += """\t<category android:name="android.intent.category.BROWSABLE" />\n"""
-			__contents += """\t<data android:scheme="%s" android:host="%s" android:pathPrefix="%s" />\n""" % [__deeplink_node.scheme, __deeplink_node.host, __deeplink_node.path_prefix]
-			__contents += "</intent-filter>\n"
+			__filters += DEEPLINK_INTENT_FILTER_FORMAT % [
+						__deeplink_node.label,
+						DEEPLINK_INTENT_FILTER_AUTO_VERIFY_PROPERTY if __deeplink_node.is_auto_verify else "",
+						DEEPLINK_INTENT_FILTER_DEFAULT_CATEGORY if __deeplink_node.is_default else "",
+						DEEPLINK_INTENT_FILTER_BROWSABLE_CATEGORY if __deeplink_node.is_browsable else "",
+						__deeplink_node.scheme,
+						__deeplink_node.host,
+						__deeplink_node.path_prefix
+					]
 
-		return __contents
+		return DEEPLINK_ACTIVITY_FORMAT % __filters
 
 
 	func _get_deeplink_nodes(a_node: Node) -> Array:
