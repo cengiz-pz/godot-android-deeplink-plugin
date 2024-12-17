@@ -21,6 +21,8 @@ There are 2 ways to install the `Deeplink` plugin into your project:
 - Through the Godot Editor's AssetLib
 - Manually by downloading archives from Github
 
+Before starting installation, please delete any other versions of this plugin.
+
 ### ![](deeplink/addon_template/icon.png?raw=true) Installing via AssetLib
 Steps:
 - search for and select the `Deeplink` plugin in Godot Editor
@@ -89,7 +91,33 @@ Developed by [Cengiz](https://github.com/cengiz-pz)
 
 Original repository: [Godot Android Deeplink Plugin](https://github.com/cengiz-pz/godot-android-deeplink-plugin)
 
-<br/><br/><br/>
+<br/><br/>
+
+
+___
+
+# ![](deeplink/addon_template/icon.png?raw=true) Contribution
+
+This section provides information on how to build the plugin for contributors.
+
+<br/>
+
+___
+
+## ![](deeplink/addon_template/icon.png?raw=true) Prerequisites
+
+- [Install AndroidStudio](https://developer.android.com/studio)
+
+<br/>
+
+___
+
+## ![](deeplink/addon_template/icon.png?raw=true) Refreshing addon submodule
+
+- Remove `deeplink/addon_template` directory
+- Run `git submodule update --remote --merge`
+
+<br/><br/>
 
 ---
 # ![](deeplink/addon_template/icon.png?raw=true) All Plugins
