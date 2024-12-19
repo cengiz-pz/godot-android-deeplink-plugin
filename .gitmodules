@@ -1,0 +1,4 @@
+[submodule "addon"]
+	path = deeplink/addon_template
+	url = https://github.com/cengiz-pz/godot-deeplink-addon.git
+	branch = main

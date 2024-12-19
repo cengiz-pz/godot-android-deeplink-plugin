@@ -11,9 +11,10 @@ plugins {
 }
 
 val pluginName = "DeeplinkPlugin"
+val pluginNodeType = "Deeplink"
 val pluginPackageName = "org.godotengine.plugin.android.deeplink"
 val godotVersion = "4.3.0"
-val pluginVersion = "3.0"
+val pluginVersion = "3.1"
 val demoAddOnsDirectory = "../demo/addons"
 val templateDirectory = "addon_template"
 val pluginDependencies = arrayOf(
@@ -96,6 +97,7 @@ val copyAddonsToDemo by tasks.registering(Copy::class) {
 	filter(ReplaceTokens::class,
 		"tokens" to mapOf(
 			"pluginName" to pluginName,
+			"pluginNodeType" to pluginNodeType,
 			"pluginVersion" to pluginVersion,
 			"pluginPackage" to pluginPackageName,
 			"pluginDependencies" to dependencyString))
