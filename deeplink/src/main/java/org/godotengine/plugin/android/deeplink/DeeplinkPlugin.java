@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.verify.domain.DomainVerificationManager;
 import android.content.pm.verify.domain.DomainVerificationUserState;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import org.godotengine.godot.plugin.GodotPlugin;
 import org.godotengine.godot.plugin.SignalInfo;
 import org.godotengine.godot.plugin.UsedByGodot;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -39,9 +41,25 @@ public class DeeplinkPlugin extends GodotPlugin {
 	private static final SignalInfo DEEPLINK_RECEIVED_SIGNAL = new SignalInfo("deeplink_received", Dictionary.class);
 
 	private Activity activity;
+	private boolean is_initialized;
 
 	public DeeplinkPlugin(Godot godot) {
 		super(godot);
+		is_initialized = false;
+	}
+
+	@UsedByGodot
+	public int initialize(String domain) {
+		int result = 0;
+
+		if (!is_initialized) {
+			is_initialized = true;
+		}
+		else {
+			Log.w(LOG_TAG, "initialize(): plugin has already been initialized!");
+		}
+
+		return result;
 	}
 
 	@UsedByGodot
@@ -101,14 +119,32 @@ public class DeeplinkPlugin extends GodotPlugin {
 
 	@UsedByGodot
 	public void navigate_to_open_by_default_settings() {
-
 		if (activity != null) {
 			Context context = activity.getApplicationContext();
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-				Intent intent = new Intent(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS, Uri.parse("package:" + context.getPackageName()));
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				Log.i(LOG_TAG, "navigate_to_open_by_default_settings(): opening 'Open By Default' settings screen.");
-				context.startActivity(intent);
+				// Check OneUI version to avoid OneUI bug with versions before 5.0.
+				int oneUiVersion = -1;
+				try {
+					oneUiVersion = Build.VERSION.class.getDeclaredField("SEM_PLATFORM_INT").getInt(null);
+				} catch (NoSuchFieldException e) {
+					Log.d(LOG_TAG, "navigate_to_open_by_default_settings(): No SEM_PLATFORM_INT.");
+				} catch (IllegalAccessException e) {
+					Log.w(LOG_TAG, "navigate_to_open_by_default_settings(): Can't get One UI version.", e);
+				}
+
+				if (oneUiVersion < 0 || oneUiVersion >= 140000) {
+					Log.i(LOG_TAG, "navigate_to_open_by_default_settings(): opening 'Open By Default' settings screen.");
+					Intent intent = new Intent(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS, Uri.parse("package:" + context.getPackageName()));
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					context.startActivity(intent);
+				}
+				else {
+					Log.i(LOG_TAG, "navigate_to_open_by_default_settings(): opening manage domain URLs settings screen.");
+					Intent intent = new Intent();
+					intent.setAction("android.settings.MANAGE_DOMAIN_URLS");
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					context.startActivity(intent);
+				}
 			}
 			else {
 				Log.e(LOG_TAG, "navigate_to_open_by_default_settings(): android version " + android.os.Build.VERSION.SDK_INT + " is not supported. " +
