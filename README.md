@@ -63,10 +63,39 @@ Steps:
 `adb shell` command can be used to simulate app links as follows:
 - `$> adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "https://www.example.com/mydata/path"`
 
-## ![](admob/addon_template/icon.png?raw=true) Android Export
+## ![](deeplink/addon_template/icon.png?raw=true) Android Export
 - Make sure that the scene that contains your Deeplink nodes is selected in the Godot Editor when building and exporting for Android
 	- Close other scenes to make sure
 	- _Deeplink nodes will be searched in the scene that is currently open in the Godot Editor_
+Android export requires several configuration settings.
+
+### ![](deeplink/addon_template/icon.png?raw=true) File-based Export Configuration
+In order to enable file-based export configuration, an `export.cfg` file should be placed in the `addons/DeeplinkPlugin` directory. The `export.cfg` configuration file may contain multiple deeplink configurations. The `scheme` and `host` properties are mandatory for each deeplink configuration.
+
+The following is a sample `export.cfg` file:
+
+```
+[Deeplink1]
+label = "deeplink1"
+is_auto_verify = true
+is_default = true
+is_browsable = true
+scheme = "https"
+host = "www.example.com"
+path_prefix = "/my_data"
+
+[Deeplink2]
+scheme = "https"
+host = "www.example2.com"
+```
+
+### ![](deeplink/addon_template/icon.png?raw=true) Node-based Export Configuration
+If `export.cfg` file is not found or file-based configuration fails, then the plugin will attempt to load node-based configuration.
+
+During Android export, the plugin searches for `Deeplink` nodes in the scene that is open in the Godot Editor.  If none found, then the plugin searches for `Deeplink` nodes in the project's main scene.  Therefore; 
+- Make sure that the scene that contains the `Deeplink` node(s) is selected in the Godot Editor when building and exporting for Android, or
+- Make sure that your Godot project's main scene contains an `Deeplink` node(s).
+
 
 ## ![](deeplink/addon_template/icon.png?raw=true) Troubleshooting
 

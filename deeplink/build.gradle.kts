@@ -14,11 +14,11 @@ val pluginName = "DeeplinkPlugin"
 val pluginNodeType = "Deeplink"
 val pluginPackageName = "org.godotengine.plugin.android.deeplink"
 val godotVersion = "4.3.0"
-val pluginVersion = "3.1"
+val pluginVersion = "3.2"
 val demoAddOnsDirectory = "../demo/addons"
 val templateDirectory = "addon_template"
 val pluginDependencies = arrayOf(
-	"androidx.annotation:annotation:1.8.2"
+	"androidx.annotation:annotation:1.9.1"
 )
 
 android {
