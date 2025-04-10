@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cbngbohjs4thb"]
 
-[ext_resource type="Script" path="res://Main.gd" id="1_6m677"]
-[ext_resource type="Script" path="res://addons/DeeplinkPlugin/Deeplink.gd" id="2_4jmv3"]
+[ext_resource type="Script" uid="uid://bvnnasa716p82" path="res://Main.gd" id="1_6m677"]
+[ext_resource type="Script" uid="uid://bh2cyf2n5bsmw" path="res://addons/DeeplinkPlugin/Deeplink.gd" id="2_4jmv3"]
 [ext_resource type="Texture2D" uid="uid://h27catmxp2hf" path="res://deeplink.png" id="2_ym6q2"]
 
 [node name="Main" type="Node"]
