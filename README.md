@@ -50,6 +50,7 @@ Steps:
 		- leave `path prefix` empty to process all paths in `host`
 - register a listener for the `deeplink_received` signal
 	- process `url`, `scheme`, `host`, and `path` data from the signal
+- invoke the `initialize()` method at startup
 - alternatively, use the following methods to get most recent deeplink data:
 	- `get_link_url()` -> full URL for the deeplink
 	- `get_link_scheme()` -> scheme for the deeplink (ie. 'https')
